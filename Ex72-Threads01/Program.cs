@@ -10,18 +10,19 @@ namespace Ex72_Threads01
     class Program
     {
         private char _sharedChar;
-        private const int SIMULATE_WORK = 100;
+        private const int SIMULATE_WORK = 1;
+        private object thisLock = new object();
 
         static void Main(string[] args)
         {
             Thread t = new Thread(WriteHello);
 
-            Thread t2 = new Thread((Object mess) =>
+            Thread t2 = new Thread((object mess) =>
             {
                 WriteHello(mess);
             });
 
-            Thread t3 = new Thread(delegate(Object mess)
+            Thread t3 = new Thread(delegate(object mess)
             {
                 WriteHello(mess);
             });
@@ -34,7 +35,7 @@ namespace Ex72_Threads01
             p.Run();
         }
 
-        static void WriteHello(Object mess)
+        static void WriteHello(object mess)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -60,9 +61,12 @@ namespace Ex72_Threads01
         {
             for (int i = 0; i < 10; i++)
             {
-                _sharedChar = 'A';
-                Thread.Sleep(SIMULATE_WORK);
-                Console.WriteLine($"{Thread.CurrentThread.Name} : {_sharedChar}");
+                lock (thisLock)
+                {
+                    _sharedChar = 'A';
+                    Thread.Sleep(SIMULATE_WORK);
+                    Console.WriteLine($"{Thread.CurrentThread.Name} : {_sharedChar}");
+                }
                 Thread.Yield();
             }
         }
@@ -71,9 +75,12 @@ namespace Ex72_Threads01
         {
             for (int i = 0; i < 10; i++)
             {
-                _sharedChar = 'B';
-                Thread.Sleep(SIMULATE_WORK);
-                Console.WriteLine($"{Thread.CurrentThread.Name} : {_sharedChar}");
+                lock (thisLock)
+                {
+                    _sharedChar = 'B';
+                    Thread.Sleep(SIMULATE_WORK);
+                    Console.WriteLine($"{Thread.CurrentThread.Name} : {_sharedChar}");
+                }
                 Thread.Yield();
             }
         }
