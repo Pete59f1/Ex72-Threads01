@@ -21,15 +21,24 @@ namespace Ex72_Threads01
             {
                 WriteHello(mess);
             });
+            
+            Thread t3 = new Thread(delegate ()
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    Console.WriteLine("Hello World");
+                }
+            });
 
-            Thread t3 = new Thread(delegate(object mess)
+            Thread t4 = new Thread(delegate (object mess)
             {
                 WriteHello(mess);
             });
 
-            t.Start("Hej t");
-            t2.Start("Nej t2");
-            t3.Start("Hello World");
+            t.Start("Bro");
+            t2.Start("Dude");
+            t3.Start();
+            t4.Start("Nej");
 
             Program p = new Program();
             p.Run();
